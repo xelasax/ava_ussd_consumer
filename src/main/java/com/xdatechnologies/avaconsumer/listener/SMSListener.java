@@ -23,5 +23,50 @@ public class SMSListener {
         smsProcessor.processSMS(smsTemplate);
         log.info("SMS WORKER A");
     }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerB(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER B");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerC(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER C");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerD(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER D");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerE(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER E");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerF(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER F");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerG(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER G");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerH(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER H");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerI(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER I");
+    }
+    @RabbitListener(queues = "alpha-virtual-academy-sms-queue")
+    public void SMSListenerJ(SMSTemplate smsTemplate) {
+        smsProcessor.processSMS(smsTemplate);
+        log.info("SMS WORKER J");
+    }
 
 }

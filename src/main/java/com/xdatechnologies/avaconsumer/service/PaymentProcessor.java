@@ -92,7 +92,7 @@ public class PaymentProcessor {
         rabbitTemplate.convertAndSend(
                 amqpPropertiesConfig.getExchange(),
                 amqpPropertiesConfig.getSmsRoutingKey(),
-                new SMSTemplate(originMsisdn, "Payment failed due to invalid phone number (" + msisdn + ")", referenceNo)
+                new SMSTemplate(originMsisdn, "Payment failed due to invalid payment wallet number (" + msisdn + ")", referenceNo)
         );
         throw new RuntimeException("Invalid phone number");
     }
