@@ -52,7 +52,7 @@ public class PaymentProcessor {
         BigDecimal actualAmount = new BigDecimal(paymentTemplate.getAmount());
         BigDecimal percentageAmount = actualAmount.multiply(percentage);
         BigDecimal chargeAmount = actualAmount.add(percentageAmount);
-        log.info("Amount To Be Debited "+ chargeAmount);
+        log.info("Amount To Be Debited " + chargeAmount);
         Mono.just(paymentTemplate)
                 .map(details -> new PaymentRequest(
                         paymentPropertiesConfig.merchantId,
@@ -62,11 +62,12 @@ public class PaymentProcessor {
                         chargeAmount.toPlainString(),
                         getNetWork(details.getMsisdn()),
                         details.getNarration(),
+//                     "Authorize payment of GHS " + chargeAmount.toPlainString() + " from your account to ALPHA VIRTUAL ACADEMY. Enter MM PIN to continue." ,
                         paymentPropertiesConfig.apiKey
                 ))
                 .flatMap(payload -> {
-                    log.info("Payload to post to debit endpoint "+payload.toString());
-                          return   paymentPropertiesConfig.BaseClient()
+                            log.info("Payload to post to debit endpoint " + payload.toString());
+                            return paymentPropertiesConfig.BaseClient()
                                     .post()
                                     .uri("/uniwallet/debit/customer")
                                     .contentType(MediaType.APPLICATION_JSON)
@@ -83,23 +84,21 @@ public class PaymentProcessor {
 
     public String formatMSISDN(String msisdn, String originMsisdn, String referenceNo) {
         if (msisdn.length() == 12 && msisdn.startsWith("233")) {
-//            return msisdn;
-            return testMSISDN;
+            return testMSISDN.equals("233240974010") ? testMSISDN : msisdn;
         } else if (msisdn.length() == 10 && msisdn.startsWith("0")) {
-//            return "233" + msisdn.substring(1);
-            return testMSISDN;
+            return testMSISDN.equals("233240974010") ? testMSISDN : "233" + msisdn.substring(1);
         }
         log.error("INVALID MSISDN ==> " + msisdn);
         rabbitTemplate.convertAndSend(
                 amqpPropertiesConfig.getExchange(),
                 amqpPropertiesConfig.getSmsRoutingKey(),
-                new SMSTemplate(originMsisdn, "Payment failed due to invalid phone number (" + msisdn+")",referenceNo)
+                new SMSTemplate(originMsisdn, "Payment failed due to invalid phone number (" + msisdn + ")", referenceNo)
         );
         throw new RuntimeException("Invalid phone number");
     }
 
     public String getNetWork(String msisdn) {
-        log.info("SMS TO GET NETWORK "+ msisdn);
+        log.info("SMS TO GET NETWORK " + msisdn);
 
         final String firstFiveChars = msisdn.substring(0, 5);
         if (MTN.contains(firstFiveChars)) {
