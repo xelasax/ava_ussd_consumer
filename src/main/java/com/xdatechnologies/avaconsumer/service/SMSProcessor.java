@@ -6,15 +6,10 @@ import com.xdatechnologies.ussd.models.SMSTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
-
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
-import java.nio.charset.StandardCharsets;
 
 @Service
 @Slf4j
@@ -35,7 +30,6 @@ public class SMSProcessor {
         Mono.just(receivedData)
                 .flatMap(messageDetails -> {
                             log.info("SMS URL =>" + messageDetails);
-                            log.info("SMS URL =>" + smsConfiguration.getBaseUrl());
                             return WebClient.create(smsConfiguration.getBaseUrl())
                                     .get()
                                     .uri(uriBuilder -> uriBuilder
@@ -62,7 +56,7 @@ public class SMSProcessor {
                 .retrieve()
                 .bodyToMono(Void.class)
         ).onErrorContinue((throwable, o) -> log.error(throwable.getMessage()))
-                .subscribe((nothing) -> log.info("MESSAGE SENT"));
+         .subscribe((nothing) -> log.info("MESSAGE SENT"));
     }
 }
 

@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Mono;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.Set;
 
 @Service
@@ -59,7 +60,8 @@ public class PaymentProcessor {
                         paymentPropertiesConfig.productId,
                         details.getRefNo(),
                         formatMSISDN(details.getMsisdn(), details.getRequestMSISDN(), paymentTemplate.getRefNo()),
-                        chargeAmount.toPlainString(),
+//                        chargeAmount.toPlainString(),
+                        chargeAmount.setScale(2, RoundingMode.CEILING).toPlainString(),
                         getNetWork(details.getMsisdn()),
                         details.getNarration(),
 //                     "Authorize payment of GHS " + chargeAmount.toPlainString() + " from your account to ALPHA VIRTUAL ACADEMY. Enter MM PIN to continue." ,
