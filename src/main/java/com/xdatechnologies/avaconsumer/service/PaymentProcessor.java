@@ -50,37 +50,37 @@ public class PaymentProcessor {
 
     public void processPayment(PAYMENTTemplate paymentTemplate) {
         log.info(paymentTemplate.toString());
-        BigDecimal actualAmount = new BigDecimal(paymentTemplate.getAmount());
-        BigDecimal percentageAmount = actualAmount.multiply(percentage);
-        BigDecimal chargeAmount = actualAmount.add(percentageAmount);
-        log.info("Amount To Be Debited " + chargeAmount);
+
         Mono.just(paymentTemplate)
-                .map(details -> new PaymentRequest(
+                .map(details -> {
+                    BigDecimal actualAmount = new BigDecimal(paymentTemplate.getAmount());
+                    BigDecimal percentageAmount = actualAmount.multiply(percentage);
+                    BigDecimal chargeAmount = actualAmount.add(percentageAmount);
+                    log.info("Amount To Be Debited " + chargeAmount);
+                    return new PaymentRequest(
                         paymentPropertiesConfig.merchantId,
                         paymentPropertiesConfig.productId,
                         details.getRefNo(),
                         formatMSISDN(details.getMsisdn(), details.getRequestMSISDN(), paymentTemplate.getRefNo()),
-//                        chargeAmount.toPlainString(),
                         chargeAmount.setScale(2, RoundingMode.CEILING).toPlainString(),
                         getNetWork(details.getMsisdn()),
                         details.getNarration(),
-//                     "Authorize payment of GHS " + chargeAmount.toPlainString() + " from your account to ALPHA VIRTUAL ACADEMY. Enter MM PIN to continue." ,
-                        paymentPropertiesConfig.apiKey
-                ))
+                        paymentPropertiesConfig.apiKey);
+                })
                 .flatMap(payload -> {
-                            log.info("Payload to post to debit endpoint " + payload.toString());
-                            return paymentPropertiesConfig.BaseClient()
-                                    .post()
-                                    .uri("/uniwallet/debit/customer")
-                                    .contentType(MediaType.APPLICATION_JSON)
-                                    .body(Mono.just(payload), PaymentRequest.class)
-                                    .retrieve()
-                                    .bodyToMono(PaymentResponse.class)
-                                    .log("Returned Response");
-                        }
-                )
-                .onErrorContinue((throwable, o) -> log.error(throwable.getMessage()))
-                .subscribe((paymentResponse -> log.info("Payment Response " + paymentResponse.toString())));
+                    log.info("Payload to post to debit endpoint " + payload.toString());
+                    return paymentPropertiesConfig.BaseClient()
+                            .post()
+                            .uri("/uniwallet/debit/customer")
+                            .contentType(MediaType.APPLICATION_JSON)
+                            .body(Mono.just(payload), PaymentRequest.class)
+                            .retrieve()
+                            .bodyToMono(PaymentResponse.class)
+                            .log("Returned Response");
+                })
+//                .onErrorContinue((throwable, o) -> log.error(throwable.getMessage()))
+                .doOnError(throwable -> log.error("An Error Occurred", throwable))
+                .subscribe((paymentResponse -> log.info("Payment Response " + paymentResponse.toString())), throwable -> log.error("An Error Occurred : " + throwable.getLocalizedMessage()));
 
     }
 
