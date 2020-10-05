@@ -3,6 +3,7 @@ package com.xdatechnologies.avaconsumer.service;
 import com.xdatechnologies.ussd.models.EMAILTemplate;
 import com.xdatechnologies.ussd.models.RegistrationTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,9 @@ public class MailService {
 
     private final JavaMailSender mailSender;
 
+    @Value("${email.set.from}")
+    private String fromEmail;
+
     @Autowired
     public MailService(JavaMailSender mailSender) {
         this.mailSender = mailSender;
@@ -20,6 +24,7 @@ public class MailService {
     public void sendEmail(RegistrationTemplate registrationTemplate){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(registrationTemplate.getEmail());
+        simpleMailMessage.setFrom(fromEmail);
         simpleMailMessage.setSubject(registrationTemplate.getSubject());
         String body="Good day, \n\nKindly find below details of a potential student or school \n\n";
         if (registrationTemplate.getRegistration() != null){
@@ -48,6 +53,7 @@ public class MailService {
     public void sendEmail(EMAILTemplate emailTemplate){
         SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
         simpleMailMessage.setTo(emailTemplate.getEmail());
+        simpleMailMessage.setFrom(fromEmail);
         simpleMailMessage.setSubject(emailTemplate.getSubject());
         String body="Kindly find the details below \n\n";
         simpleMailMessage.setText(body + emailTemplate.getEmailBody());
