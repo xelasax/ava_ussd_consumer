@@ -79,7 +79,7 @@ public class PaymentProcessor {
                             .log("Returned Response");
                 })
 //                .onErrorContinue((throwable, o) -> log.error(throwable.getMessage()))
-                .doOnError(throwable -> log.error("An Error Occurred", throwable))
+                .doOnError(throwable -> log.error("An Error Occurred", throwable.getCause()))
                 .subscribe((paymentResponse -> log.info("Payment Response " + paymentResponse.toString())), throwable -> log.error("An Error Occurred : " + throwable.getLocalizedMessage()));
 
     }

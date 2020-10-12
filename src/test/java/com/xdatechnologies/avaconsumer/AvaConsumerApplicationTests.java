@@ -16,11 +16,11 @@ class AvaConsumerApplicationTests {
     void contextLoads() {
     }
 
-    @Test
-    void processPayment() {
-        BigDecimal amount = new BigDecimal("1000");
-        System.out.println(amount.toPlainString());
-    }
+//    @Test
+//    void processPayment() {
+//        BigDecimal amount = new BigDecimal("1000");
+//        System.out.println(amount.toPlainString());
+//    }
 
 
 /*	@Test
