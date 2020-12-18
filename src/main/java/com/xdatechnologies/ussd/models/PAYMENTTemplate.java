@@ -13,4 +13,5 @@ public class PAYMENTTemplate implements Serializable {
     private final String amount; // amount
     private final String narration; // description
     private final String requestMSISDN;
+    private final String network;
 }

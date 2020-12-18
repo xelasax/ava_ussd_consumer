@@ -50,7 +50,6 @@ public class PaymentProcessor {
 
     public void processPayment(PAYMENTTemplate paymentTemplate) {
         log.info(paymentTemplate.toString());
-
         Mono.just(paymentTemplate)
                 .map(details -> {
                     BigDecimal actualAmount = new BigDecimal(paymentTemplate.getAmount());
@@ -63,7 +62,7 @@ public class PaymentProcessor {
                         details.getRefNo(),
                         formatMSISDN(details.getMsisdn(), details.getRequestMSISDN(), paymentTemplate.getRefNo()),
                         chargeAmount.setScale(2, RoundingMode.CEILING).toPlainString(),
-                        getNetWork(details.getMsisdn()),
+                        details.getNetwork(),
                         details.getNarration(),
                         paymentPropertiesConfig.apiKey);
                 })

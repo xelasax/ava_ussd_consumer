@@ -55,8 +55,8 @@ public class SMSProcessor {
                 .body(Mono.just(new SMSInternalCallback(returnedResponse, receivedData.getReferenceID())), SMSInternalCallback.class)
                 .retrieve()
                 .bodyToMono(Void.class)
-        ).onErrorContinue((throwable, o) -> log.error(throwable.getMessage()))
-         .subscribe((nothing) -> log.info("MESSAGE SENT"));
+        ).doOnError(throwable -> {log.error("AN ERROR OCCURRED " + throwable.getMessage());})
+         .subscribe((nothing) -> log.info("MESSAGE SENT"), throwable -> log.error(throwable.getCause().toString()));
     }
 }
 
